@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #007bff;
+}
+
+button:not([disabled]) {
+  cursor: pointer;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+select {
+  border: 0;
+  vertical-align: middle;
+  background: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  padding-left: 5px;
+}
+
+div:has(> select)::after {
+  content: "\2304";
+}
