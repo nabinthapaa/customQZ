@@ -1,5 +1,5 @@
 import Divider from "@/components/ui/Divider";
-import { Answer, useQuestionContext } from "@/context/questions";
+import { Answer, useQuizContext } from "@/context/quiz";
 import {
   FocusEvent,
   KeyboardEvent,
@@ -20,7 +20,7 @@ export const Choice = memo(
     value: Answer;
     onDelete: (v: Answer) => void;
   }) => {
-    const { dispatch, id } = useQuestionContext();
+    const { state, dispatch } = useQuizContext();
     const [isEditing, setIsEditing] = useState(false);
     const inputRef = useRef<HTMLSpanElement | null>(null);
 
@@ -36,19 +36,19 @@ export const Choice = memo(
       (e: FocusEvent<HTMLSpanElement>) => {
         const choice = e.target.innerText.trim();
         dispatch({
-          type: "UPDATE_CHOICE",
+          type: "UPDATE_QUESTION",
           payload: {
-            choices: [
-              {
-                id: value.id,
-                value: choice,
-              },
-            ],
+            id: state.selectedQuestionId!,
+            choices: state.questions
+              .find((q) => q.id === state.selectedQuestionId)
+              ?.choices.map((c) =>
+                c.id === value.id ? { ...c, value: choice } : c,
+              ),
           },
         });
         setIsEditing(false);
       },
-      [dispatch, value.id],
+      [dispatch, state, value.id],
     );
 
     const handleKeyDown = useCallback((e: KeyboardEvent<HTMLSpanElement>) => {
@@ -68,7 +68,11 @@ export const Choice = memo(
       <>
         <div className="flex items-center space-x-3 w-full">
           <input
-            name={type === "radio" ? `answer-${id}` : undefined}
+            name={
+              type === "radio"
+                ? `answer-${state.selectedQuestionId}`
+                : undefined
+            }
             type={type}
             className="w-5 h-5 cursor-pointer"
           />

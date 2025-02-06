@@ -1,32 +1,46 @@
+import { Answer, useQuizContext } from "@/context/quiz";
 import { memo, useCallback } from "react";
 import { Choice } from "./Choice";
-import { useQuestionContext, Answer } from "@/context/questions";
 
 export const ChoicesList = memo(() => {
-  const { state, dispatch } = useQuestionContext();
+  const { state, dispatch } = useQuizContext();
+  const selectedQuestion = state.questions.find(
+    (q) => q.id === state.selectedQuestionId,
+  );
 
   const addChoice = useCallback(() => {
+    if (!selectedQuestion) return;
     dispatch({
-      type: "ADD_CHOICE",
-      payload: { choices: [{ value: "New Choice", id: crypto.randomUUID() }] },
+      type: "UPDATE_QUESTION",
+      payload: {
+        id: selectedQuestion.id,
+        choices: [
+          ...selectedQuestion.choices,
+          { value: "New Choice", id: crypto.randomUUID() },
+        ],
+      },
     });
-  }, [dispatch]);
+  }, [dispatch, selectedQuestion]);
 
   const removeChoice = useCallback(
     (choice: Answer) => {
+      if (!selectedQuestion) return;
       dispatch({
-        type: "REMOVE_CHOICE",
-        payload: { choices: [choice] },
+        type: "UPDATE_QUESTION",
+        payload: {
+          id: selectedQuestion.id,
+          choices: selectedQuestion.choices.filter((c) => c.id !== choice.id),
+        },
       });
     },
-    [dispatch],
+    [dispatch, selectedQuestion],
   );
 
   return (
     <div className="space-y-2">
-      {state?.choices?.map((choice) => (
+      {selectedQuestion?.choices.map((choice) => (
         <Choice
-          type={state?.isMultiple ? "checkbox" : "radio"}
+          type={selectedQuestion.isMultiple ? "checkbox" : "radio"}
           onDelete={removeChoice}
           key={choice.id}
           value={choice}

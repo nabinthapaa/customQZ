@@ -1,41 +1,59 @@
+import Divider from "@/components/ui/Divider";
 import { ErrorView } from "@/components/ui/Error";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import Switch from "@/components/ui/Switch";
-import { useQuestionContext } from "@/context/questions";
+import { Question as IQuestion, useQuizContext } from "@/context/quiz";
 import { useCallback, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ChoicesList } from "./ChoiceList";
 import { Footer } from "./Footer";
 import { Question } from "./Question";
-import Divider from "@/components/ui/Divider";
 
-const QuestionEditor = () => {
+const QuestionEditor = ({ question }: { question: IQuestion }) => {
   const [answerWithImage, setAnswerWithImage] = useState(false);
-  const { state, dispatch, id } = useQuestionContext();
+  const { state, dispatch } = useQuizContext();
 
-  const handleRequiredChange = useCallback(
-    () => dispatch({ type: "IS_QUESTION_REQUIRED" }),
-    [dispatch],
-  );
+  const handleRequiredChange = useCallback(() => {
+    if (!question) return;
+    dispatch({
+      type: "UPDATE_QUESTION",
+      payload: {
+        id: question.id,
+        required: !question.required,
+      },
+    });
+  }, [dispatch, question]);
 
   const handleAnswerType = useCallback(
     () => setAnswerWithImage(!answerWithImage),
     [answerWithImage],
   );
 
-  const handleMulitpleAnswer = useCallback(
-    () => dispatch({ type: "CHANGE_ANSWER_TYPE" }),
-    [dispatch],
-  );
+  const handleMulitpleAnswer = useCallback(() => {
+    if (!question) return;
+    dispatch({
+      type: "UPDATE_QUESTION",
+      payload: {
+        id: question.id,
+        isMultiple: !question.isMultiple,
+      },
+    });
+  }, [dispatch, question]);
 
   const handleImageChange = useCallback(
-    (image: File) => console.log(image),
-    [],
+    (image: File) => {
+      if (!question) return;
+      dispatch({
+        type: "UPDATE_QUESTION",
+        payload: { id: question.id, image },
+      });
+    },
+    [dispatch, question],
   );
 
   return (
     <ErrorBoundary FallbackComponent={ErrorView}>
-      <div className="max-w-2xl bg-white p-6 shadow-lg rounded-lg">
+      <div className="w-full bg-white p-6 shadow-lg rounded-lg">
         <div className="flex justify-between items-center">
           <div>
             <select className="border p-2 rounded text-gray-700 focus:outline-none">
@@ -44,9 +62,9 @@ const QuestionEditor = () => {
             </select>
           </div>
           <Switch
-            id={`required-${id}`}
-            label="Required"
-            checked={!!state.required}
+            id={`required-${state.selectedQuestionId}`}
+            label={`${state.selectedQuestionId}`}
+            checked={!!question?.required}
             onChange={handleRequiredChange}
           />
         </div>
@@ -58,19 +76,19 @@ const QuestionEditor = () => {
           </div>
           <ImageUpload
             onImageChange={handleImageChange}
-            id={`image-upload-${id}`}
+            id={`image-upload-${state.selectedQuestionId}`}
           />
         </div>
 
         <div className="mt-4 flex space-x-4">
           <Switch
-            id={`answer-type-toggle-${id}`}
+            id={`answer-type-toggle-${state.selectedQuestionId}`}
             label="Multiple answer"
-            checked={!!state.isMultiple}
+            checked={!!question?.isMultiple}
             onChange={handleMulitpleAnswer}
           />
           <Switch
-            id={`answer-with-image-${id}`}
+            id={`answer-with-image-${state.selectedQuestionId}`}
             label="Answer with image"
             checked={answerWithImage}
             onChange={handleAnswerType}
