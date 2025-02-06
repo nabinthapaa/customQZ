@@ -6,7 +6,6 @@ import { Button, ButtonIcon, ButtonText } from "@/components/ui/Button";
 import Cross from "@/components/ui/icons/Cross";
 import Stamp from "@/components/ui/icons/Stamp";
 import Upload from "@/components/ui/icons/Upload";
-import Questions from "@/components/ui/Questions";
 import { memo, useCallback, useState } from "react";
 import { Link } from "react-router";
 
@@ -58,7 +57,6 @@ export default function Home() {
           />
         </div>
         <Buttons />
-        <Questions />
       </main>
       <LeaderBoard isOpen={isLeaderBoardOpen} onClose={closeLeaderBoard} />
       <QuizInfo isOpen={isQuizInfoOpen} onClose={closeQuizInfo} />

@@ -81,7 +81,8 @@ export const Choice = memo(
             contentEditable={isEditing}
             onBlur={handleEdit}
             onKeyDown={handleKeyDown}
-            className="text-gray-800 flex-1 bg-gray-400/20 inline-block py-2 px-2 rounded-lg h-full"
+            onDoubleClick={handleEditToggle}
+            className="text-gray-800 flex-1 bg-gray-400/20 inline-block min-h-[2.5rem] py-2 px-2 rounded-lg h-full"
             dangerouslySetInnerHTML={{ __html: String(value.value) }}
           />
           <button

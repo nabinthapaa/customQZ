@@ -7,6 +7,7 @@ const defaultQuestion = (): Omit<Question, "id"> => ({
   required: false,
   image: null,
   isMultiple: false,
+  answerWithImage: false,
 });
 
 export function quizReducer(state: QuizState, action: QuizAction): QuizState {
@@ -17,6 +18,7 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
         ...defaultQuestion(),
       };
       return {
+        ...state,
         questions: [...state.questions, newQuestion],
         selectedQuestionId: newQuestion.id,
       };
@@ -36,14 +38,13 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
       };
     }
     case "UPDATE_QUESTION": {
-      const newQuestions = state.questions.map((q) =>
+      const updatedQuestions = state.questions.map((q) =>
         q.id === action.payload.id ? { ...q, ...action.payload } : q,
       );
-      return { ...state, questions: newQuestions };
+      return { ...state, questions: updatedQuestions };
     }
-    case "SELECT_QUESTION": {
+    case "SELECT_QUESTION":
       return { ...state, selectedQuestionId: action.payload.id };
-    }
     default:
       return state;
   }

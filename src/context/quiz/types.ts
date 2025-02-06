@@ -16,6 +16,7 @@ export interface Question {
   required: boolean;
   image: File | null;
   isMultiple: boolean;
+  answerWithImage: boolean;
 }
 
 export interface QuizState {

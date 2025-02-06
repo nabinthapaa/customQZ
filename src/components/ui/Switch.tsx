@@ -3,18 +3,18 @@ import { ChangeEvent, HTMLAttributes, memo, useCallback } from "react";
 export default memo(function Switch({
   label,
   checked,
-  onChange,
+  onValueChange,
   id,
   ...props
 }: HTMLAttributes<HTMLInputElement> & {
   label: string;
   checked: boolean;
   id: string;
-  onChange: (e: boolean) => void;
+  onValueChange: (e: boolean) => void;
 }) {
   const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.checked),
-    [onChange],
+    (e: ChangeEvent<HTMLInputElement>) => onValueChange(e.target.checked),
+    [onValueChange],
   );
 
   return (
