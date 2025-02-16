@@ -10,7 +10,7 @@ import { Footer } from "./Footer";
 import { Question } from "./Question";
 
 const QuestionEditor = ({ question }: { question: IQuestion }) => {
-  const [answerWithImage, setAnswerWithImage] = useState(false);
+  const [answerWithImage] = useState(false);
   const { state, dispatch } = useQuizContext();
 
   const handleRequiredChange = useCallback(() => {
@@ -24,15 +24,18 @@ const QuestionEditor = ({ question }: { question: IQuestion }) => {
     });
   }, [dispatch, question]);
 
-  const handleAnswerType = useCallback((value: boolean) => {
-    dispatch({
-      type: "UPDATE_QUESTION", 
-      payload: {
-        id: question.id,
-        answerWithImage: value
-      }
-    });
-  }, [answerWithImage, dispatch, question]);
+  const handleAnswerType = useCallback(
+    (value: boolean) => {
+      dispatch({
+        type: "UPDATE_QUESTION",
+        payload: {
+          id: question.id,
+          answerWithImage: value,
+        },
+      });
+    },
+    [dispatch, question],
+  );
 
   const handleMulitpleAnswer = useCallback(() => {
     if (!question) return;
@@ -70,7 +73,7 @@ const QuestionEditor = ({ question }: { question: IQuestion }) => {
             id={`required-${state.selectedQuestionId}`}
             label={`Required`}
             checked={!!question?.required}
-            onChange={handleRequiredChange}
+            onValueChange={handleRequiredChange}
           />
         </div>
         <Divider />
@@ -90,13 +93,13 @@ const QuestionEditor = ({ question }: { question: IQuestion }) => {
             id={`answer-type-toggle-${state.selectedQuestionId}`}
             label="Multiple answer"
             checked={!!question?.isMultiple}
-            onChange={handleMulitpleAnswer}
+            onValueChange={handleMulitpleAnswer}
           />
           <Switch
             id={`answer-with-image-${state.selectedQuestionId}`}
             label="Answer with image"
             checked={answerWithImage}
-            onChange={handleAnswerType}
+            onValueChange={handleAnswerType}
           />
         </div>
 
