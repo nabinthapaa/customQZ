@@ -22,9 +22,9 @@ function Navbar() {
       </Link>
       <div className="text-xl font-medium flex items-center justify-between gap-x-4">
         <div className="grid grid-cols-[repeat(3,min-content)] text-gray-600 gap-x-2">
-          <button>Login</button>
+          <Link to="/login">Login</Link>
           <div className="border-l-2 w-fit border-gray-600" />
-          <button>Signup</button>
+          <Link to="/register">Signup</Link>
         </div>
         <div className="flex items-center gap-x-4">
           <button className="w-6 aspect-square text-gray-600">

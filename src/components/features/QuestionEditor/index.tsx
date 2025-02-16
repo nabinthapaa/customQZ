@@ -3,13 +3,14 @@ import { ErrorView } from "@/components/ui/Error";
 import { ImageUpload } from "@/components/ui/ImageUpload";
 import Switch from "@/components/ui/Switch";
 import { Question as IQuestion, useQuizContext } from "@/context/quiz";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ChoicesList } from "./ChoiceList";
 import { Footer } from "./Footer";
 import { Question } from "./Question";
 
 const QuestionEditor = ({ question }: { question: IQuestion }) => {
+  const [answerWithImage, setAnswerWithImage] = useState(false);
   const { state, dispatch } = useQuizContext();
 
   const handleRequiredChange = useCallback(() => {
@@ -23,18 +24,15 @@ const QuestionEditor = ({ question }: { question: IQuestion }) => {
     });
   }, [dispatch, question]);
 
-  const handleAnswerType = useCallback(
-    (value: boolean) => {
-      dispatch({
-        type: "UPDATE_QUESTION",
-        payload: {
-          id: question.id,
-          answerWithImage: value,
-        },
-      });
-    },
-    [dispatch, question.id],
-  );
+  const handleAnswerType = useCallback((value: boolean) => {
+    dispatch({
+      type: "UPDATE_QUESTION", 
+      payload: {
+        id: question.id,
+        answerWithImage: value
+      }
+    });
+  }, [answerWithImage, dispatch, question]);
 
   const handleMulitpleAnswer = useCallback(() => {
     if (!question) return;
@@ -72,7 +70,7 @@ const QuestionEditor = ({ question }: { question: IQuestion }) => {
             id={`required-${state.selectedQuestionId}`}
             label={`Required`}
             checked={!!question?.required}
-            onValueChange={handleRequiredChange}
+            onChange={handleRequiredChange}
           />
         </div>
         <Divider />
@@ -92,13 +90,13 @@ const QuestionEditor = ({ question }: { question: IQuestion }) => {
             id={`answer-type-toggle-${state.selectedQuestionId}`}
             label="Multiple answer"
             checked={!!question?.isMultiple}
-            onValueChange={handleMulitpleAnswer}
+            onChange={handleMulitpleAnswer}
           />
           <Switch
             id={`answer-with-image-${state.selectedQuestionId}`}
             label="Answer with image"
-            checked={question.answerWithImage}
-            onValueChange={handleAnswerType}
+            checked={answerWithImage}
+            onChange={handleAnswerType}
           />
         </div>
 
