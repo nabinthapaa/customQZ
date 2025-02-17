@@ -39,11 +39,13 @@ const QuestionEditor = ({ question }: { question: IQuestion }) => {
 
   const handleMulitpleAnswer = useCallback(() => {
     if (!question) return;
+    const choices = question.choices.map((c) => ({ ...c, isAnswer: false }));
     dispatch({
       type: "UPDATE_QUESTION",
       payload: {
         id: question.id,
         isMultiple: !question.isMultiple,
+        choices,
       },
     });
   }, [dispatch, question]);

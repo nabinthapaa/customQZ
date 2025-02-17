@@ -16,7 +16,7 @@ export const ChoicesList = memo(() => {
         id: selectedQuestion.id,
         choices: [
           ...selectedQuestion.choices,
-          { value: "New Choice", id: crypto.randomUUID() },
+          { value: "New Choice", id: crypto.randomUUID(), isAnswer: false },
         ],
       },
     });
@@ -36,6 +36,30 @@ export const ChoicesList = memo(() => {
     [dispatch, selectedQuestion],
   );
 
+  const updateAnswer = useCallback(
+    (choice: Answer) => {
+      if (!selectedQuestion) return;
+  
+      const updatedChoices = selectedQuestion.isMultiple
+        ? selectedQuestion.choices.map((c) =>
+            c.id === choice.id ? { ...c, isAnswer: !c.isAnswer } : c
+          )
+        : selectedQuestion.choices.map((c) => ({
+            ...c,
+            isAnswer: c.id === choice.id,
+          }));
+  
+      dispatch({
+        type: "UPDATE_QUESTION",
+        payload: {
+          id: selectedQuestion.id,
+          choices: updatedChoices,
+        },
+      });
+    },
+    [dispatch, selectedQuestion],
+  );
+
   return (
     <div className="space-y-2">
       {selectedQuestion?.choices.map((choice) => (
@@ -44,6 +68,8 @@ export const ChoicesList = memo(() => {
           onDelete={removeChoice}
           key={choice.id}
           value={choice}
+          onValueChange={updateAnswer}
+          isAnswer={choice.isAnswer}
         />
       ))}
       <button

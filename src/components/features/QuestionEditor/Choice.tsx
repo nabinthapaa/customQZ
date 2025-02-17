@@ -13,12 +13,16 @@ import {
 export const Choice = memo(
   ({
     type,
+    isAnswer,
     value,
     onDelete,
+    onValueChange,
   }: {
     type: "checkbox" | "radio";
+    isAnswer: boolean;
     value: Answer;
     onDelete: (v: Answer) => void;
+    onValueChange: (v: Answer) => void;
   }) => {
     const { state, dispatch } = useQuizContext();
     const [isEditing, setIsEditing] = useState(false);
@@ -73,6 +77,8 @@ export const Choice = memo(
                 ? `answer-${state.selectedQuestionId}`
                 : undefined
             }
+            checked={isAnswer}
+            onChange={() => onValueChange(value)}
             type={type}
             className="w-5 h-5 cursor-pointer"
           />

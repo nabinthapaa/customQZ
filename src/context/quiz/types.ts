@@ -6,6 +6,7 @@ export interface QuizContextProps {
 export interface Answer {
   id: string;
   value: string | undefined;
+  isAnswer: boolean;
 }
 
 export interface Question {
