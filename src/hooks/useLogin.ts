@@ -1,11 +1,14 @@
 import { config } from "@/config";
+import { useAuth } from "@/context/auth";
 import { ILogin } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { redirect } from "react-router";
 
 const url = config.API_ROOT + "user/login/";
 
 export default function useLogin() {
   const client = useQueryClient();
+  const { dispatch } = useAuth();
   const { mutate, isSuccess, isPending, isError } = useMutation(
     {
       mutationKey: ["login"],
@@ -30,7 +33,8 @@ export default function useLogin() {
         alert(error.message);
       },
       onSuccess(data) {
-        console.log(data);
+        dispatch({ type: "ADD_USER", payload: data });
+        redirect("/");
       },
     },
     client,

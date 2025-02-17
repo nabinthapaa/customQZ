@@ -6,12 +6,16 @@ import { Button, ButtonIcon, ButtonText } from "@/components/ui/Button";
 import Cross from "@/components/ui/icons/Cross";
 import Stamp from "@/components/ui/icons/Stamp";
 import Upload from "@/components/ui/icons/Upload";
+import { useAuth } from "@/context/auth";
 import { memo, useCallback, useState } from "react";
 import { Link } from "react-router";
 
 export default function Home() {
   const [isQuizInfoOpen, setIsQuizInfoOpen] = useState<boolean>(false);
   const [isLeaderBoardOpen, setIsLeaderBoardOpen] = useState<boolean>(false);
+  const {
+    auth: { isAuthenticated },
+  } = useAuth();
 
   const closeLeaderBoard = useCallback(() => setIsLeaderBoardOpen(false), []);
   const closeQuizInfo = useCallback(() => setIsQuizInfoOpen(false), []);
@@ -39,7 +43,7 @@ export default function Home() {
               </button>
             </div>
             <Link
-              to="/create-quiz"
+              to={isAuthenticated ? "/create-quiz" : "/login"}
               className="text-(--primary) flex items-center gap-x-2 whitespace-nowrap bg-white px-4 py-2 rounded-md text-xl font-medium shadow-sm"
             >
               <span className="inline-block w-6">

@@ -13,6 +13,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AuthContextProvider from "./context/auth/Provider.tsx";
 
 let root = document.getElementById("root")!;
 if (!root) {
@@ -27,7 +28,9 @@ const queryClient = new QueryClient();
 createRoot(root).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <AuthContextProvider>
+        <App />
+      </AuthContextProvider>
     </QueryClientProvider>
   </StrictMode>,
 );

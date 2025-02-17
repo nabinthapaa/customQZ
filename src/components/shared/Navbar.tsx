@@ -3,8 +3,12 @@ import { memo } from "react";
 import { Link } from "react-router";
 import Gear from "../ui/icons/Gear";
 import Info from "../ui/icons/Info";
+import { useAuth } from "@/context/auth";
 
 function Navbar() {
+  const {
+    auth: { isAuthenticated },
+  } = useAuth();
   return (
     <nav className="container px-2 mx-auto flex items-center justify-between py-4">
       <Link
@@ -21,11 +25,13 @@ function Navbar() {
         <p>CustomQz</p>
       </Link>
       <div className="text-xl font-medium flex items-center justify-between gap-x-4">
-        <div className="grid grid-cols-[repeat(3,min-content)] text-gray-600 gap-x-2">
-          <Link to="/login">Login</Link>
-          <div className="border-l-2 w-fit border-gray-600" />
-          <Link to="/register">Signup</Link>
-        </div>
+        {!isAuthenticated && (
+          <div className="grid grid-cols-[repeat(3,min-content)] text-gray-600 gap-x-2">
+            <Link to="/login">Login</Link>
+            <div className="border-l-2 w-fit border-gray-600" />
+            <Link to="/register">Signup</Link>
+          </div>
+        )}
         <div className="flex items-center gap-x-4">
           <button className="w-6 aspect-square text-gray-600">
             <Info />
